@@ -1,0 +1,15 @@
+.App {
+    display: flex;
+    gap: 12px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 200px;
+    background-color: darkseagreen;
+    color: white;
+}
