@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 import Header from "../layouts/layout1/Header";
 import Nav from "../layouts/layout1/Nav";
 
@@ -8,43 +8,33 @@ import Button from "react-bootstrap/button";
 import Form from "react-bootstrap/Form";
 import Pagination from "react-bootstrap/Pagination";
 
+import { fetch_contacts, set_page } from "../redux/actions/contactAction";
+
 const Contact = () => {
-  const [contacts, setContacts] = useState([]);
+  const dispatch = useDispatch();
+  //const [contacts, setContacts] = useState([]);
+  const contacts = useSelector((state) => state.contactReducer.contacts);
+  const pages = useSelector((state) => state.contactReducer.pages);
+  const page = useSelector((state) => state.contactReducer.page);
+  console.log("contacts => ", contacts);
   const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [pages, setPages] = useState([]);
+  // const [page, setPage] = useState(1);
 
-  const handleSearch = () => {
-    axios
-      .get(`https://swapi.dev/api/people?search=${search}`, {})
-      .then((res) => {
-        setContacts(res.data.results);
-        console.log(res.data.results);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const handleSearch = () => {
+  //   axios
+  //     .get(`https://swapi.dev/api/people?search=${search}`, {})
+  //     .then((res) => {
+  //       setContacts(res.data.results);
+  //       console.log(res.data.results);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
-  // akan dijalankan kalau component telah selesai di render / ( nilai state berubah )
   useEffect(() => {
-    axios
-      .get(`https://swapi.dev/api/people?page=${page}`, {})
-      .then((res) => {
-        var items2 = [];
-
-        for (var i = 1; i <= Math.ceil(res.data.count / 10); i++) {
-          items2.push(i);
-        }
-
-        setPages(items2);
-        setContacts(res.data.results);
-        console.log(res.data.results);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [page]);
+    dispatch(fetch_contacts({ page: page, search: search }));
+  }, []);
 
   return (
     <>
@@ -58,7 +48,7 @@ const Contact = () => {
                 key={number}
                 active={number === page}
                 onClick={() => {
-                  setPage(number);
+                  dispatch(set_page(number));
                 }}
               >
                 {number}
@@ -82,7 +72,7 @@ const Contact = () => {
           variant="primary"
           style={{ marginLeft: 10 }}
           onClick={() => {
-            handleSearch();
+            //handleSearch();
           }}
         >
           {" "}
@@ -118,7 +108,7 @@ const Contact = () => {
                 key={number}
                 active={number === page}
                 onClick={() => {
-                  setPage(number);
+                  dispatch(set_page(number));
                 }}
               >
                 {number}

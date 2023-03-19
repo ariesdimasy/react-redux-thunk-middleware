@@ -1,8 +1,7 @@
 import axios from "axios";
 
-export function getContacts(page) {
-  return async (dispatch, getState) => {
-    const res = await axios.get(`https://swapi.dev/api/people?page=${page}`);
-    dispatch(res.data);
-  };
+export async function getContacts(q) {
+  var queryParams = new URLSearchParams(q).toString();
+  const res = await axios.get(`https://swapi.dev/api/people?${queryParams}`);
+  return res;
 }
